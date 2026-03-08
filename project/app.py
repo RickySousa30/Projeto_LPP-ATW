@@ -1,14 +1,18 @@
 import os
 from flask import Flask, render_template, request, redirect, url_for, flash, session
+from dotenv import load_dotenv
 from models import db, User, Category, Event
 from datetime import datetime
 from functools import wraps
 
+# Caregar variáveis de ambiente do ficheiro .env
+load_dotenv()
+
 app = Flask(__name__)
-# Configuração base: usar SQLite para desenvolvimento inicial, fácil migrar para MySQL depois
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///ispgaya.db'
+# Configuração base: usar o DATABASE_URL (.env) apontar para o Supabase, fallback para SQLite local
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'sqlite:///ispgaya.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SECRET_KEY'] = 'ispgaya_secret_key_cultural_lab_2025' # Secret key for session/flash
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'ispgaya_secret_key_cultural_lab_2025')
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
 
 # Garantir que a pasta de uploads existe
