@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}Programação Externa | Laboratório Cultural ISPGAYA{% endblock %}
+
+{% block content %}
+<div class="container" style="margin-top: 2rem;">
+    <h1 class="text-center" style="margin-bottom: 1rem;">Programação Cultural <span style="color: var(--primary-color);">Externa</span></h1>
+    <p class="text-center" style="max-width: 800px; margin: 0 auto 3rem;">Descubra os melhores eventos culturais da região. Filtre por cidade ou categoria para encontrar aquilo que mais the interessa nas redondezas de Vila Nova de Gaia e Grande Porto.</p>
+
+    <!-- Barra de Filtros -->
+    <div class="filters-section">
+        <form method="GET" action="{{ url_for('programacao_externa') }}" style="display: flex; flex-wrap: wrap; gap: 1rem; width: 100%; align-items: flex-end;">
+            
+            <div class="filter-group">
+                <label for="cidade"><i class="ph ph-map-pin" style="vertical-align: middle;"></i> Cidade</label>
+                <select name="cidade" id="cidade">
+                    <option value="">Todas as Cidades</option>
+                    {% for city in cities %}
+                        <option value="{{ city }}" {% if request.args.get('cidade') == city %}selected{% endif %}>{{ city }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label for="categoria"><i class="ph ph-tag" style="vertical-align: middle;"></i> Categoria</label>
+                <select name="categoria" id="categoria">
+                    <option value="">Todas as Categorias</option>
+                    {% for cat in categories %}
+                        <option value="{{ cat.id }}" {% if request.args.get('categoria')|string == cat.id|string %}selected{% endif %}>{{ cat.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="filter-group" style="flex: 0 0 auto;">
+                <button type="submit" class="btn btn-primary" style="height: 48px; display: flex; align-items: center; gap: 5px;">
+                    <i class="ph ph-funnel"></i> Filtrar
+                </button>
+            </div>
+            
+            {% if request.args.get('cidade') or request.args.get('categoria') %}
+            <div class="filter-group" style="flex: 0 0 auto;">
+                <a href="{{ url_for('programacao_externa') }}" class="btn btn-secondary" style="height: 48px; display: flex; align-items: center; gap: 5px;">
+                    <i class="ph ph-x"></i> Limpar
+                </a>
+            </div>
+            {% endif %}
+            
+        </form>
+    </div>
+
+    <!-- Lista de Eventos -->
+    {% if events %}
+    <div class="events-grid">
+        {% for event in events %}
+        <div class="event-card">
+            <div class="event-img" style="{% if event.image_path %}background-image: url('{{ event.image_path }}'); background-size: cover; background-position: center;{% else %}background: linear-gradient(135deg, #1E293B, #334155); display: flex; align-items: center; justify-content: center; color: white; font-size: 2rem;{% endif %}">
+                {% if not event.image_path %}
+                    <i class="ph ph-music-notes" {% if event.category and event.category.name == 'Teatro' %}class="ph ph-mask-happy"{% endif %} ></i>
+                {% endif %}
+                <span class="event-badge">{{ event.category.name if event.category else 'Diversos' }}</span>
+            </div>
+            <div class="event-content">
+                <div class="event-date">
+                    <i class="ph ph-calendar-blank"></i> {{ event.date.strftime('%d.%m.%Y às %H:%M') }}
+                </div>
+                <h3 class="event-title">{{ event.title }}</h3>
+                <div class="event-location" style="margin-bottom: 1rem;">
+                    <i class="ph ph-map-pin"></i> {{ event.location }} {% if event.city %}- {{ event.city }}{% endif %}
+                </div>
+                <p style="font-size: 0.95rem; line-height: 1.5; margin-bottom: 1.5rem; flex-grow: 1;">
+                    {{ event.description[:120] }}{% if event.description|length > 120 %}...{% endif %}
+                </p>
+                <a href="{{ url_for('evento_detalhe', id=event.id) }}" class="btn btn-secondary" style="width: 100%; border-color: var(--primary-color); color: var(--primary-color);">Saber Mais</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div style="background: white; padding: 4rem 2rem; text-align: center; border-radius: var(--border-radius); border: 1px dashed #CBD5E1; margin-top: 2rem;">
+        <i class="ph ph-magnifying-glass" style="font-size: 3rem; color: #94A3B8; margin-bottom: 1rem;"></i>
+        <h3 style="color: var(--secondary-color);">Nenhum evento encontrado</h3>
+        <p>Não encontrámos eventos externos com os filtros selecionados.</p>
+        <button onclick="window.location.href='{{ url_for('programacao_externa') }}'" class="btn btn-primary" style="margin-top: 1rem;">Limpar Filtros</button>
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}

@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}Clube de Leitura | Laboratório Cultural ISPGAYA{% endblock %}
+
+{% block content %}
+<!-- Banner Topo -->
+<div style="background-color: var(--secondary-color); color: white; padding: 4rem 5% 2rem; position: relative; overflow: hidden;">
+    <div style="position: absolute; right: -5%; bottom: -20%; opacity: 0.1; font-size: 20rem;">
+        <i class="ph ph-book-open"></i>
+    </div>
+    <div class="container" style="position: relative; z-index: 2;">
+        <h1 style="color: white; margin-bottom: 0.5rem;">Clube de <span style="color: var(--primary-color);">Leitura</span></h1>
+        <p style="font-size: 1.2rem; color: #CBD5E1; max-width: 600px;">Descubra novos mundos, debata ideias e partilhe a paixão pelos livros com a comunidade académica.</p>
+    </div>
+</div>
+
+<div class="container" style="margin-top: 2rem;">
+    <!-- Secção Apresentação -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; margin-bottom: 5rem;">
+        <div>
+            <h2 style="color: var(--primary-color); font-size: 1.8rem;">Sobre o Clube</h2>
+            <p>O Clube de Leitura do ISPGAYA reúne-se mensalmente para discutir uma obra selecionada. É um espaço aberto a todos os estudantes e docentes que procuram expandir os seus horizontes literários num ambiente descontraído.</p>
+            <p>As nossas sessões incluem não só a discussão do livro do mês, mas também recomendações bibliográficas e ocasionais encontros com autores.</p>
+            
+            <div style="margin-top: 2rem; padding: 1.5rem; background: white; border-radius: var(--border-radius); border-left: 4px solid var(--primary-color); box-shadow: var(--shadow-sm);">
+                <h4 style="margin-bottom: 0.5rem; display: flex; align-items: center; gap: 5px;">
+                    <i class="ph ph-info" style="color: var(--primary-color);"></i> Inscrições
+                </h4>
+                <p style="margin-bottom: 1rem; font-size: 0.95rem;">Quer fazer parte? Simule a sua inscrição para receber as informações sobre a próxima sessão no seu email institucional.</p>
+                <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.9rem;">Simular Inscrição</button>
+            </div>
+        </div>
+        <div>
+            <!-- Livro em Destaque Visual Simulada -->
+            <div style="background: white; border-radius: var(--border-radius); padding: 2rem; box-shadow: var(--shadow-md); text-align: center; position: relative;">
+                <span style="position: absolute; top: 1rem; right: -1rem; background: var(--primary-color); color: white; padding: 0.3rem 1rem; font-weight: 600; font-size: 0.8rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transform: rotate(5deg);">Obra do Mês</span>
+                <div style="width: 150px; height: 220px; background: #eee url('https://images.unsplash.com/photo-1544947950-fa07a98d237f?q=80&w=687&auto=format&fit=crop') center/cover; margin: 0 auto 1.5rem; border-radius: 4px; box-shadow: 10px 10px 20px rgba(0,0,0,0.15);"></div>
+                <h3 style="margin-bottom: 0.2rem;">Ensaio Sobre a Cegueira</h3>
+                <p style="color: var(--text-light); font-size: 0.9rem; margin-bottom: 1rem;">José Saramago</p>
+                <p style="font-size: 0.9rem; line-height: 1.5;">O aclamado romance de José Saramago é a escolha para a nossa próxima sessão. Uma reflexão profunda sobre a natureza humana e a sociedade.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Calendário de Sessões -->
+    <h2 style="margin-bottom: 2rem; text-align: center;">Próximas Sessões</h2>
+    
+    {% if events %}
+    <div style="max-width: 800px; margin: 0 auto;">
+        {% for event in events %}
+        <div style="display: flex; background: white; border-radius: var(--border-radius); overflow: hidden; box-shadow: var(--shadow-sm); margin-bottom: 1.5rem; border: 1px solid #F1F5F9; transition: transform 0.2s ease;" onmouseover="this.style.transform='translateX(5px)'" onmouseout="this.style.transform='translateX(0)'">
+            <!-- Bloco de Data -->
+            <div style="background: var(--primary-color); color: white; width: 120px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 1.5rem;">
+                <span style="font-size: 1rem; font-weight: 600; text-transform: uppercase;">{{ event.date.strftime('%b') }}</span>
+                <span style="font-size: 2.5rem; font-weight: 800; line-height: 1;">{{ event.date.strftime('%d') }}</span>
+                <span style="font-size: 0.9rem; opacity: 0.9; margin-top: 0.5rem;"><i class="ph ph-clock"></i> {{ event.date.strftime('%H:%M') }}</span>
+            </div>
+            <!-- Detalhes -->
+            <div style="padding: 1.5rem; flex-grow: 1;">
+                <h3 style="margin-bottom: 0.5rem;"><a href="{{ url_for('evento_detalhe', id=event.id) }}" style="text-decoration: none; color: inherit;">{{ event.title }}</a></h3>
+                <div style="color: var(--text-light); font-size: 0.9rem; margin-bottom: 1rem; display: flex; gap: 1rem;">
+                    <span><i class="ph ph-map-pin" style="vertical-align: middle;"></i> {{ event.location }}</span>
+                </div>
+                <p style="font-size: 0.95rem; margin-bottom: 0;">{{ event.description }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div style="background: white; padding: 3rem; text-align: center; border-radius: var(--border-radius); border: 1px dashed #CBD5E1; max-width: 800px; margin: 0 auto;">
+        <i class="ph ph-books" style="font-size: 3rem; color: #94A3B8; margin-bottom: 1rem;"></i>
+        <h3 style="color: var(--secondary-color);">Sem sessões agendadas</h3>
+        <p>Ainda não foram definidas as próximas sessões de leitura.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

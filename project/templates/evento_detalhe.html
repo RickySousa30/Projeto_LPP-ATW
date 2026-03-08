@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}{{ event.title }} | Laboratório Cultural ISPGAYA{% endblock %}
+
+{% block content %}
+<div class="container" style="margin-top: 2rem; max-width: 900px;">
+    <!-- Botão de Voltar -->
+    <a href="javascript:history.back()" style="display: inline-flex; align-items: center; gap: 5px; color: var(--text-light); text-decoration: none; margin-bottom: 2rem; font-weight: 500; transition: color 0.3s;" onmouseover="this.style.color='var(--primary-color)'" onmouseout="this.style.color='var(--text-light)'">
+        <i class="ph ph-arrow-left"></i> Voltar
+    </a>
+
+    <div style="background: white; border-radius: var(--border-radius); overflow: hidden; box-shadow: var(--shadow-md);">
+        <!-- Imagem de Topo -->
+        <div style="width: 100%; height: 350px; {% if event.image_path %}background-image: url('{{ event.image_path }}'); background-size: cover; background-position: center;{% else %}background: linear-gradient(135deg, rgba(243, 146, 0, 0.8), rgba(30, 41, 59, 0.9)); display: flex; align-items: center; justify-content: center; color: white; font-size: 5rem;{% endif %} position: relative;">
+            {% if not event.image_path %}
+                <i class="ph ph-ticket"></i>
+            {% endif %}
+            <span style="position: absolute; bottom: 20px; right: 20px; background: white; color: var(--primary-color); padding: 5px 15px; border-radius: 20px; font-weight: 700; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                {{ event.category.name if event.category else 'Sem Categoria' }}
+            </span>
+        </div>
+
+        <div style="padding: 3rem; position: relative;">
+            <!-- Badge de Tipo de Evento -->
+            {% set type_labels = {'leitura': 'Clube de Leitura', 'teatro': 'Clube de Teatro', 'externa': 'Programação Externa'} %}
+            {% set type_color = {'leitura': '#3B82F6', 'teatro': '#8B5CF6', 'externa': 'var(--primary-color)'} %}
+            <span style="display: inline-block; padding: 5px 12px; background-color: {{ type_color.get(event.type, 'var(--text-light)') }}; color: white; border-radius: 6px; font-size: 0.8rem; font-weight: 600; margin-bottom: 1rem; text-transform: uppercase;">
+                {{ type_labels.get(event.type, 'Geral') }}
+            </span>
+
+            <h1 style="font-size: 2.5rem; margin-bottom: 1rem; color: var(--text-dark);">{{ event.title }}</h1>
+            
+            <!-- Metadata Row -->
+            <div style="display: flex; flex-wrap: wrap; gap: 2rem; border-bottom: 1px solid #E2E8F0; padding-bottom: 1.5rem; margin-bottom: 2rem;">
+                <div style="display: flex; align-items: center; gap: 10px; color: var(--text-dark);">
+                    <div style="width: 45px; height: 45px; background: #FFF4E5; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                        <i class="ph ph-calendar-blank" style="font-size: 1.5rem; color: var(--primary-color);"></i>
+                    </div>
+                    <div>
+                        <div style="font-size: 0.8rem; color: var(--text-light); text-transform: uppercase; font-weight: 600;">Data e Hora</div>
+                        <div style="font-weight: 600;">{{ event.date.strftime('%d de %B, %Y') }} às {{ event.date.strftime('%H:%M') }}</div>
+                    </div>
+                </div>
+
+                <div style="display: flex; align-items: center; gap: 10px; color: var(--text-dark);">
+                    <div style="width: 45px; height: 45px; background: #FFF4E5; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                        <i class="ph ph-map-pin" style="font-size: 1.5rem; color: var(--primary-color);"></i>
+                    </div>
+                    <div>
+                        <div style="font-size: 0.8rem; color: var(--text-light); text-transform: uppercase; font-weight: 600;">Localização</div>
+                        <div style="font-weight: 600;">{{ event.location }}{% if event.city %} - {{ event.city }}{% endif %}</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content -->
+            <div style="font-size: 1.1rem; line-height: 1.8; color: var(--text-dark); white-space: pre-line;">
+                {{ event.description }}
+            </div>
+
+            <!-- Botão Partilhar -->
+            <div style="margin-top: 3rem; text-align: center;">
+                <button class="btn btn-secondary" onclick="alert('Funcionalidade de partilha a ser implementada')" style="display: inline-flex; align-items: center; gap: 8px;">
+                    <i class="ph ph-share-network"></i> Partilhar Evento
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

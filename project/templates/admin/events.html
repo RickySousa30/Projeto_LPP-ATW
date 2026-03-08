@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}Gestão de Eventos | Laboratório Cultural ISPGAYA{% endblock %}
+
+{% block content %}
+<div class="container" style="margin-top: 2rem;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+        <div>
+            <h1>Eventos</h1>
+            <p style="margin-bottom: 0;">Gestão global de programação cultural do ISPGAYA e Exterior.</p>
+        </div>
+        <div>
+            <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary" style="margin-right: 10px;"><i class="ph ph-arrow-left"></i> Voltar</a>
+            <a href="{{ url_for('admin_event_add') }}" class="btn btn-primary"><i class="ph ph-plus"></i> Novo Evento</a>
+        </div>
+    </div>
+
+    <div style="background: white; border-radius: var(--border-radius); box-shadow: var(--shadow-sm); overflow: hidden; border: 1px solid #E2E8F0;">
+        <table style="width: 100%; border-collapse: collapse; text-align: left;">
+            <thead style="background-color: #F8FAFC; border-bottom: 2px solid #E2E8F0;">
+                <tr>
+                    <th style="padding: 1.2rem; font-weight: 600; color: var(--secondary-color);">Data</th>
+                    <th style="padding: 1.2rem; font-weight: 600; color: var(--secondary-color);">Título</th>
+                    <th style="padding: 1.2rem; font-weight: 600; color: var(--secondary-color);">Tipo / Categoria</th>
+                    <th style="padding: 1.2rem; font-weight: 600; color: var(--secondary-color);">Localização</th>
+                    <th style="padding: 1.2rem; font-weight: 600; color: var(--secondary-color); text-align: right;">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% set type_labels = {'leitura': 'C. Leitura', 'teatro': 'C. Teatro', 'externa': 'Externa', 'noticia': 'Notícia'} %}
+                {% set type_colors = {'leitura': '#DBEAFE', 'teatro': '#EDE9FE', 'externa': '#FFF4E5', 'noticia': '#F3F4F6'} %}
+                {% set type_text = {'leitura': '#1E40AF', 'teatro': '#5B21B6', 'externa': '#9A3412', 'noticia': '#374151'} %}
+                
+                {% for event in events %}
+                <tr style="border-bottom: 1px solid #F1F5F9; transition: background-color 0.2s;" onmouseover="this.style.backgroundColor='#F8FAFC'" onmouseout="this.style.backgroundColor='transparent'">
+                    <td style="padding: 1.2rem; color: var(--text-dark); font-weight: 500;">
+                        <i class="ph ph-calendar-blank" style="color: var(--text-light); vertical-align: middle;"></i>
+                        {{ event.date.strftime('%d.%m.%Y') }}<br>
+                        <span style="font-size: 0.85rem; color: var(--text-light);">{{ event.date.strftime('%H:%M') }}</span>
+                    </td>
+                    <td style="padding: 1.2rem;">
+                        <div style="font-weight: 600; color: var(--secondary-color);">{{ event.title }}</div>
+                    </td>
+                    <td style="padding: 1.2rem;">
+                        <span style="display: inline-block; padding: 2px 8px; background-color: {{ type_colors.get(event.type, '#F3F4F6') }}; color: {{ type_text.get(event.type, '#374151') }}; border-radius: 4px; font-size: 0.8rem; font-weight: 600; margin-bottom: 4px;">
+                            {{ type_labels.get(event.type, 'Event') }}
+                        </span><br>
+                        <span style="font-size: 0.85rem; color: var(--text-light);">
+                            {{ event.category.name if event.category else 'Sem Categoria' }}
+                        </span>
+                    </td>
+                    <td style="padding: 1.2rem; color: var(--text-light); font-size: 0.95rem;">
+                        {{ event.location }}<br>
+                        <span style="font-size: 0.85rem;">{{ event.city }}</span>
+                    </td>
+                    <td style="padding: 1.2rem; text-align: right;">
+                        <div style="display: flex; gap: 8px; justify-content: flex-end;">
+                            <a href="{{ url_for('admin_event_edit', id=event.id) }}" class="btn" title="Editar" style="padding: 0.4rem; background-color: #E1EFFE; color: #1E429F; display: flex; align-items: center; justify-content: center; border-radius: 6px;">
+                                <i class="ph ph-pencil-simple" style="font-size: 1.2rem;"></i>
+                            </a>
+                            <form action="{{ url_for('admin_event_delete', id=event.id) }}" method="POST" onsubmit="return confirm('Tem a certeza? O evento será eliminado permanentemente.');" style="display: inline;">
+                                <button type="submit" class="btn" title="Eliminar" style="padding: 0.4rem; background-color: #FDE8E8; color: #9B1C1C; display: flex; align-items: center; justify-content: center; border-radius: 6px;">
+                                    <i class="ph ph-trash" style="font-size: 1.2rem;"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" style="padding: 3rem; text-align: center; color: var(--text-light);">
+                        <i class="ph ph-calendar-plus" style="font-size: 2.5rem; color: #CBD5E1; margin-bottom: 1rem;"></i>
+                        <p>Nenhum evento encontrado.</p>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

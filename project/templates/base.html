@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Laboratório Cultural | ISPGAYA{% endblock %}</title>
+    <!-- Use Phosphor Icons for elegant minimalist icons matching the modern theme -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <a href="{{ url_for('index') }}" class="nav-brand">
+            ISPGAYA <span class="lab-text">| Laboratório Cultural</span>
+        </a>
+        <ul class="nav-menu">
+            <li><a href="{{ url_for('index') }}" class="{% if request.endpoint == 'index' %}active{% endif %}">Início</a></li>
+            <li><a href="{{ url_for('clube_leitura') }}" class="{% if request.endpoint == 'clube_leitura' %}active{% endif %}">Clube de Leitura</a></li>
+            <li><a href="{{ url_for('clube_teatro') }}" class="{% if request.endpoint == 'clube_teatro' %}active{% endif %}">Clube de Teatro</a></li>
+            <li><a href="{{ url_for('programacao_externa') }}" class="{% if request.endpoint == 'programacao_externa' %}active{% endif %}">Agenda Externa</a></li>
+            
+            {% if 'user_id' in session %}
+                <li><a href="{{ url_for('admin_dashboard') }}" class="btn-login"><i class="ph ph-shield-check" style="vertical-align: middle; margin-right: 5px;"></i> Admin</a></li>
+            {% else %}
+                <li><a href="{{ url_for('login') }}" class="btn-login"><i class="ph ph-sign-in" style="vertical-align: middle; margin-right: 5px;"></i> Entrar</a></li>
+            {% endif %}
+        </ul>
+        <div class="burger" id="burger-menu">
+            <div class="line1"></div>
+            <div class="line2"></div>
+            <div class="line3"></div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-col" style="max-width: 300px;">
+                <h3>Laboratório Cultural</h3>
+                <p style="font-size: 0.9rem;">Uma iniciativa estratégica para promover a cultura dentro e fora do ISPGAYA, apoiando as atividades dos alunos e divulgando novas ideias.</p>
+            </div>
+            <div class="footer-col">
+                <h3>Ligaçōes Rápidas</h3>
+                <ul style="list-style: none; padding: 0;">
+                    <li style="margin-bottom: 0.5rem;"><a href="{{ url_for('clube_leitura') }}" style="color: #CBD5E1; text-decoration: none;">Clube de Leitura</a></li>
+                    <li style="margin-bottom: 0.5rem;"><a href="{{ url_for('clube_teatro') }}" style="color: #CBD5E1; text-decoration: none;">Clube de Teatro</a></li>
+                    <li><a href="{{ url_for('programacao_externa') }}" style="color: #CBD5E1; text-decoration: none;">Programação Externa</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Contacto</h3>
+                <ul style="list-style: none; padding: 0;">
+                    <li style="margin-bottom: 0.5rem;"><i class="ph ph-map-pin" style="vertical-align: middle; margin-right: 5px;"></i> Vila Nova de Gaia</li>
+                    <li style="margin-bottom: 0.5rem;"><i class="ph ph-envelope" style="vertical-align: middle; margin-right: 5px;"></i> cultura@ispgaya.pt</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p style="margin-bottom: 0;">&copy; {{ range(2025, 2026) | list | last }} Instituto Superior Politécnico Gaya. Disciplinas de LPP e ATW. Criado por Henrique e Gonçalo.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // Mobile Menu Toggle
+        const burger = document.getElementById('burger-menu');
+        const nav = document.querySelector('.nav-menu');
+
+        burger.addEventListener('click', () => {
+            nav.classList.toggle('nav-active');
+            burger.classList.toggle('toggle');
+        });
+        
+        // Auto-dismiss flash messages after 5 seconds
+        setTimeout(() => {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => {
+                alert.style.opacity = '0';
+                setTimeout(() => alert.style.display = 'none', 400);
+            });
+        }, 5000);
+    </script>
+</body>
+</html>

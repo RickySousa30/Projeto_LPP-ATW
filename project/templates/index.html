@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block title %}Laboratório Cultural | Instituto Superior Politécnico Gaya{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section style="background: linear-gradient(rgba(30, 41, 59, 0.8), rgba(30, 41, 59, 0.9)), url('https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=2070&auto=format&fit=crop') center/cover; color: white; padding: 6rem 5% 4rem; text-align: center;">
+    <div style="max-width: 800px; margin: 0 auto;">
+        <h1 style="color: white; font-size: 3.5rem; margin-bottom: 1rem; animation: slideDown 0.8s ease;">Laboratório <span style="color: var(--primary-color);">Cultural</span></h1>
+        <p style="font-size: 1.2rem; color: #E2E8F0; margin-bottom: 2rem; animation: slideDown 1s ease;">Descubra, envolva-se e viva a cultura dentro e fora do ISPGAYA. Uma iniciativa para promover a arte, a literatura e muito mais.</p>
+        <div style="display: flex; gap: 1rem; justify-content: center; animation: slideDown 1.2s ease;">
+            <a href="{{ url_for('programacao_externa') }}" class="btn btn-primary">Agenda Cultural</a>
+            <a href="#about" class="btn btn-secondary" style="background: transparent; color: white; border-color: white;">Saber Mais</a>
+        </div>
+    </div>
+</section>
+
+<div class="container" id="about">
+    <!-- Missão Section -->
+    <section class="mb-2 text-center" style="max-width: 800px; margin: 4rem auto;">
+        <h2>A Nossa Missão</h2>
+        <p>O Laboratório Cultural do ISPGAYA assume um papel estratégico na promoção da cultura. Queremos criar um espaço onde a comunidade académica possa explorar novas formas de expressão e conectar-se através de iniciativas como o Clube de Leitura e o Clube de Teatro, além de divulgar as melhores atividades culturais da região do Grande Porto.</p>
+    </section>
+
+    <!-- Destaques Section -->
+    <section class="mt-2" style="margin-top: 5rem;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2rem;">
+            <div>
+                <h2 style="margin-bottom: 0.5rem;">Eventos em Destaque</h2>
+                <p style="margin-bottom: 0;">Não perca as próximas iniciativas culturais.</p>
+            </div>
+            <a href="{{ url_for('programacao_externa') }}" style="color: var(--primary-color); font-weight: 600; text-decoration: none; display: flex; align-items: center; gap: 5px;">
+                Ver todos <i class="ph ph-arrow-right"></i>
+            </a>
+        </div>
+
+        {% if events %}
+        <div class="events-grid">
+            {% for event in events %}
+            <div class="event-card">
+                <div class="event-img" style="{% if event.image_path %}background-image: url('{{ event.image_path }}'); background-size: cover; background-position: center;{% else %}background: linear-gradient(45deg, var(--primary-color), var(--primary-dark)); display: flex; align-items: center; justify-content: center; color: white; font-size: 2rem;{% endif %}">
+                    {% if not event.image_path %}
+                        <i class="ph ph-calendar-star"></i>
+                    {% endif %}
+                    <span class="event-badge">{{ event.category.name if event.category else 'Cultural' }}</span>
+                </div>
+                <div class="event-content">
+                    <div class="event-date">
+                        <i class="ph ph-calendar-blank"></i> {{ event.date.strftime('%d.%m.%Y às %H:%M') }}
+                    </div>
+                    <h3 class="event-title">{{ event.title }}</h3>
+                    <div class="event-location" style="margin-bottom: 1rem;">
+                        <i class="ph ph-map-pin"></i> {{ event.location }} {% if event.city %}- {{ event.city }}{% endif %}
+                    </div>
+                    <p style="font-size: 0.95rem; line-height: 1.5; margin-bottom: 1.5rem; flex-grow: 1;">
+                        {{ event.description[:100] }}{% if event.description|length > 100 %}...{% endif %}
+                    </p>
+                    <a href="{{ url_for('evento_detalhe', id=event.id) }}" class="btn btn-secondary" style="width: 100%; border-color: var(--primary-color); color: var(--primary-color);">Detalhes do Evento</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div style="background: white; padding: 3rem; text-align: center; border-radius: var(--border-radius); border: 1px dashed #CBD5E1;">
+            <i class="ph ph-calendar-x" style="font-size: 3rem; color: #94A3B8; margin-bottom: 1rem;"></i>
+            <h3 style="color: var(--secondary-color);">Não existem eventos agendados</h3>
+            <p>Fique atento, em breve teremos novidades na nossa agenda cultural!</p>
+        </div>
+        {% endif %}
+    </section>
+    
+    <!-- Clubes Section -->
+    <section style="margin: 6rem 0;">
+        <h2 class="text-center" style="margin-bottom: 3rem;">Iniciativas Internas</h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+            <!-- Clube de Leitura -->
+            <div style="background: white; border-radius: 16px; padding: 2.5rem; text-align: center; box-shadow: var(--shadow-sm); transition: transform 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div style="width: 80px; height: 80px; background: #FFF4E5; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem;">
+                    <i class="ph ph-books" style="font-size: 2.5rem; color: var(--primary-color);"></i>
+                </div>
+                <h3 style="margin-bottom: 1rem; color: var(--secondary-color);">Clube de Leitura</h3>
+                <p style="font-size: 0.95rem;">Junte-se a nós para debater as obras em destaque do mês. Um espaço para partilhar ideias e o amor pela literatura.</p>
+                <a href="{{ url_for('clube_leitura') }}" class="btn btn-secondary" style="margin-top: 1rem;">Ver Calendário</a>
+            </div>
+            
+            <!-- Clube de Teatro -->
+            <div style="background: white; border-radius: 16px; padding: 2.5rem; text-align: center; box-shadow: var(--shadow-sm); transition: transform 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div style="width: 80px; height: 80px; background: #FFF4E5; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem;">
+                    <i class="ph ph-mask-happy" style="font-size: 2.5rem; color: var(--primary-color);"></i>
+                </div>
+                <h3 style="margin-bottom: 1rem; color: var(--secondary-color);">Clube de Teatro</h3>
+                <p style="font-size: 0.95rem;">Desenvolva as suas capacidades de expressão. Acompanhe a nossa agenda de ensaios abertos e os próximos espetáculos.</p>
+                <a href="{{ url_for('clube_teatro') }}" class="btn btn-secondary" style="margin-top: 1rem;">Saber Mais</a>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}
