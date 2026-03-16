@@ -6,3 +6,4 @@ Goncalo Caetano Nº 2023
 
 Neste trablho iremos implementar uma nova aba no site do ISPGAYA, onde vai ter informações etc...
 
+Database_pass: Projeto_LPP
