@@ -1,0 +1,29 @@
+(function() {
+    var menus = [
+        document.querySelector('.navbar-nav'),
+        document.querySelector('.menu'),
+        document.querySelector('ul[role="menubar"]'),
+        document.querySelector('nav ul')
+    ];
+
+    var menuPrincipal = menus.find(m => m !== null);
+
+    if (menuPrincipal) {
+        var li = document.createElement('li');
+        li.innerHTML = `
+            <a href="http://127.0.0.1:5000" style="
+                color: #c5a059 !important; 
+                font-weight: 800 !important; 
+                padding: 10px 15px !important;
+                text-transform: uppercase;
+                text-decoration: none;
+                font-family: 'Montserrat', sans-serif;
+                font-size: 13px;
+            ">
+                LABORATÓRIO CULTURAL
+            </a>
+        `;
+        menuPrincipal.appendChild(li);
+        alert("Aba injetada com sucesso! Procura no menu superior.");
+    } 
+})();
